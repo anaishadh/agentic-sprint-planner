@@ -1,4 +1,11 @@
+import os
+from dotenv import load_dotenv
+import openai
 from core.state import SprintState
+
+# Load environment variables
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def business_analyst_agent(state: SprintState) -> SprintState:
@@ -8,17 +15,24 @@ def business_analyst_agent(state: SprintState) -> SprintState:
     - Identifies high-level solution requirements
     """
     prompt = f"""
-    You are a senior business analyst.
+You are a senior business analyst.
 
-    Client problem:
-    {state.client_problem_statement}
+Client problem:
+{state.client_problem_statement}
 
-    Your task:
-    - Identify what needs to be built
-    - Highlight frontend, backend, and infrastructure concerns
-    - Keep it concise and structured
-    """
+Task:
+- Identify what needs to be built
+- Highlight frontend, backend, and infrastructure concerns
+- Keep it concise and structured
+"""
 
-    # Temporary placeholder (we'll replace with LLM call on Day 3)
-    state.research_notes = prompt.strip()
+    # New OpenAI v1 interface
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.3
+    )
+
+    # Extract text
+    state.research_notes = response.choices[0].message.content.strip()
     return state
