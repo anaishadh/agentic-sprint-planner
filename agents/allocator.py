@@ -21,7 +21,7 @@ def allocate_tasks(state: SprintState) -> SprintState:
 
     for task in state.tasks:
         # Eligible members: have all required skills
-        eligible = [m for m in state.team if all(skill in m.skills for skill in task.required_skills)]
+        eligible = [m for m in state.team if any(skill in m.skills for skill in task.required_skills)]
 
         # Sort eligible by least used hours (fair distribution)
         eligible.sort(key=lambda m: member_load[m.name])

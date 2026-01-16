@@ -47,7 +47,7 @@ Output MUST be valid JSON in the following format:
 Rules:
 - 4 to 8 tasks
 - realistic engineering estimates
-- skills must be relevant
+- skills must be relevant and categorize those skills under broader terms like frontend,backend,ML etc
 """
 
     response = openai.chat.completions.create(
