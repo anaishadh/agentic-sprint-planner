@@ -30,4 +30,10 @@ final_state = SprintState(**final_state_dict)
 
 print(final_state.research_notes)
 for task in final_state.tasks:
-    print(f"{task.id}: {task.description}")
+    print(f"""
+{task.id}
+Description      : {task.description}
+Required Skills  : {', '.join(task.required_skills)}
+Estimated Hours  : {task.estimated_hours}
+""")
+

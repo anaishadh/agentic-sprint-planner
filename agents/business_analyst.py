@@ -7,6 +7,7 @@ from core.state import SprintState
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+print(">>> Running Business Analyst Agent")
 
 def business_analyst_agent(state: SprintState) -> SprintState:
     """

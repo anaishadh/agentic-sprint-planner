@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 import openai
 from core.state import SprintState, Task
@@ -6,48 +7,63 @@ from core.state import SprintState, Task
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+print(">>> Running Task Breakdown Agent")
 
 def task_breakdown_agent(state: SprintState) -> SprintState:
     """
-    Converts research notes into structured engineering tasks.
+    Converts research notes into validated engineering tasks.
+    Enforces strict JSON output.
     """
-    prompt = f"""
-You are a technical project manager.
 
-Based on the following research notes, break the work into clear engineering tasks.
+    system_prompt = """
+You are a system that outputs ONLY valid JSON.
+No explanations.
+No markdown.
+No extra text.
+"""
+
+    user_prompt = f"""
+Based on the following research notes, generate a list of engineering tasks.
 
 Research notes:
 {state.research_notes}
 
-Instructions:
-- Return 4–8 tasks
-- Each task should include:
-  - Short description
-  - Required skills
-  - Estimated effort in hours
-- Think like a real engineering team
+Output MUST be valid JSON in the following format:
+
+[
+  {{
+    "id": "TASK-1",
+    "description": "Short task description",
+    "required_skills": ["frontend", "backend"],
+    "estimated_hours": 6
+  }}
+]
+
+Rules:
+- 4 to 8 tasks
+- realistic engineering estimates
+- skills must be relevant
 """
 
     response = openai.chat.completions.create(
         model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.3
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt}
+        ],
+        temperature=0.1
     )
 
     raw_output = response.choices[0].message.content.strip()
 
-    # Temporary naive parsing (we’ll improve later)
-    tasks = []
-    for idx, line in enumerate(raw_output.split("\n")):
-        if line.strip():
-            tasks.append(
-                Task(
-                    id=f"TASK-{idx+1}",
-                    description=line.strip(),
-                    required_skills=["backend"],  # placeholder
-                    estimated_hours=4  # placeholder
-                )
-            )
+    # HARD FAIL if not JSON
+    try:
+        parsed = json.loads(raw_output)
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"Task Breakdown Agent failed to return valid JSON.\nOutput was:\n{raw_output}"
+        )
 
-    state.tasks = tasks
+    # Validate with Pydantic
+    state.tasks = [Task(**task) for task in parsed]
     return state
