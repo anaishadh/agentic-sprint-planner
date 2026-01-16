@@ -29,3 +29,5 @@ final_state_dict = graph.invoke(initial_state)
 final_state = SprintState(**final_state_dict)
 
 print(final_state.research_notes)
+for task in final_state.tasks:
+    print(f"{task.id}: {task.description}")
