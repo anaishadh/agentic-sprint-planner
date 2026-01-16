@@ -16,6 +16,7 @@ class Task(BaseModel):
     estimated_hours: int
     assigned_to: Optional[str] = None
     status: str = "pending"  # pending / in_progress / completed
+    schedule: Optional[List[str]] = None  # List of "Day X" strings
 
 
 class SprintState(BaseModel):

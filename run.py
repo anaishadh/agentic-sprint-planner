@@ -43,5 +43,13 @@ Assigned To      : {task.assigned_to or 'Unassigned'}
 
 print("\n=== SPRINT SUMMARY ===")
 print(final_state.sprint_plan)
+print("\n=== DAILY DASHBOARD ===")
+for member in initial_state.team:
+    print(f"\n{member.name}'s schedule:")
+    for task in final_state.tasks:
+        if task.assigned_to == member.name and task.schedule:
+            print(f"  {task.id} ({task.description}):")
+            for s in task.schedule:
+                print(f"    {s}")
 
 
