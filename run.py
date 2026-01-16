@@ -28,12 +28,20 @@ final_state_dict = graph.invoke(initial_state)
 # Convert back to Pydantic object
 final_state = SprintState(**final_state_dict)
 
+print("\n=== RESEARCH NOTES ===")
 print(final_state.research_notes)
+
+print("\n=== TASKS & ASSIGNMENTS ===")
 for task in final_state.tasks:
     print(f"""
 {task.id}
 Description      : {task.description}
 Required Skills  : {', '.join(task.required_skills)}
 Estimated Hours  : {task.estimated_hours}
+Assigned To      : {task.assigned_to or 'Unassigned'}
 """)
+
+print("\n=== SPRINT SUMMARY ===")
+print(final_state.sprint_plan)
+
 
