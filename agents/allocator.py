@@ -1,9 +1,13 @@
 from core.state import Task, TeamMember, SprintState
 from typing import List
 
-print(">>> Running Task Allocator Agent")
-
 def allocate_tasks(state: SprintState) -> SprintState:
+    # In task_breakdown_agent / allocate_tasks / schedule_tasks
+    if not state.can_proceed:
+        print(">>> Skipping Task Allocator agent because input is invalid")
+        return state
+    
+    print(">>> Running Task Allocator Agent")
     """
     Assigns tasks to team members based on skills and availability.
     Updates task.assigned_to and member's used hours.

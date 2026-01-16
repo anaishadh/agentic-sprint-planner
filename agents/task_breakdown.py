@@ -7,9 +7,14 @@ from core.state import SprintState, Task
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-print(">>> Running Task Breakdown Agent")
 
 def task_breakdown_agent(state: SprintState) -> SprintState:
+    # In task_breakdown_agent / allocate_tasks / schedule_tasks
+    if not state.can_proceed:
+        print(">>> Skipping Task_breakdown agent because input is invalid")
+        return state
+    
+    print(">>> Running Task Breakdown Agent")
     """
     Converts research notes into validated engineering tasks.
     Enforces strict JSON output.

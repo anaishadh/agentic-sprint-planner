@@ -2,9 +2,13 @@ from core.state import SprintState, Task, TeamMember
 from typing import List
 import math
 
-print(">>> Running Sprint Scheduler Agent")
-
 def schedule_tasks(state: SprintState) -> SprintState:
+    # In task_breakdown_agent / allocate_tasks / schedule_tasks
+    if not state.can_proceed:
+        print(">>> Skipping Scheduler agent because input is invalid")
+        return state
+    
+    print(">>> Running Sprint Scheduler Agent")
     """
     Distributes tasks assigned to team members across the sprint days
     according to each member's daily availability.

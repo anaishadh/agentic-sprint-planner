@@ -4,13 +4,19 @@ from graph.workflow import build_graph
 graph = build_graph()
 
 initial_state = SprintState(
-    client_problem_statement="Design a user registration feature for a website",
+    client_problem_statement="Design a tool to send automated emails using agentic ai",
     sprint_length_days=10,
     team=[
         TeamMember(
             name="Alice",
             skills=["frontend", "react"],
             experience_level="mid",
+            availability_hours_per_day=6,
+        ),
+        TeamMember(
+            name="Naishadh",
+            skills=["full-stack", "AWS","Cybersecurity","AI&ML","python", "Database"],
+            experience_level="senior",
             availability_hours_per_day=6,
         ),
         TeamMember(

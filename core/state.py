@@ -25,6 +25,7 @@ class SprintState(BaseModel):
     sprint_length_days: int
     deadline: Optional[str] = None
     team: List[TeamMember]
+    can_proceed: bool = True  # default True
 
     # Intermediate outputs
     research_notes: Optional[str] = None
